@@ -51,28 +51,41 @@ app.get('/',(req,res)=>{
     res.send('Server Motositefinder')
 })
 
+// halaman home
+app.get('/',(req,res)=>{
+    res.send('home')
+})
+
 // Endpoint untuk mendapatkan semua data motor dalam bentuk JSON
-app.get('/api/motors', wrapAsync(async (req, res) => {
+app.get('/allMotors', wrapAsync(async (req, res) => {
     const motors = await Motor.find();
     res.json({ motors });
 }));
 
 // Endpoint untuk mendapatkan detail motor berdasarkan ID dalam bentuk JSON
-app.get('/api/motors/:id', wrapAsync(async (req, res) => {
+app.get('/motors/:id', wrapAsync(async (req, res) => {
     const { id } = req.params;
     const motor = await Motor.findById(id);
     res.json({ motor });
 }));
 
-// Endpoint untuk menambahkan data motor baru dalam bentuk JSON
-app.post('/api/motors', validateMotor, wrapAsync(async (req, res, next) => {
+app.get('/create/form', (req,res)=>{
+    res.send('halaman edit')
+})
+// menambahkan data motor baru dalam bentuk JSON
+app.post('/create/form/motor', validateMotor, wrapAsync(async (req, res, next) => {
     const motor = new Motor(req.body.motor);
     await motor.save();
     res.json({ message: 'Motor added successfully', motor });
 }));
 
-// Endpoint untuk mengupdate data motor berdasarkan ID dalam bentuk JSON
-app.put('/api/motors/:id', validateMotor, wrapAsync(async (req, res) => {
+// menuju ke halaman edit 
+app.get('/motors/:id/edit',wrapAsync(async(req,res)=>{
+    const motor = await Motor.findById(req.params.id);
+    res.render('pages/editForm', {motor})
+}))
+// mengupdate data motor berdasarkan ID dalam bentuk JSON
+app.put('/motors/:id/edit/update', validateMotor, wrapAsync(async (req, res) => {
     const { id } = req.params;
     const motor = await Motor.findByIdAndUpdate(id, { ...req.body.motor });
     res.json({ message: 'Motor updated successfully', motor });
