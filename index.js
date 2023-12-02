@@ -46,6 +46,11 @@ const validateMotor = (req, res, next) => {
     }
 };
 
+// server route/landing page 
+app.get('/',(req,res)=>{
+    res.send('Server Motositefinder')
+})
+
 // Endpoint untuk mendapatkan semua data motor dalam bentuk JSON
 app.get('/api/motors', wrapAsync(async (req, res) => {
     const motors = await Motor.find();
