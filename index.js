@@ -82,7 +82,8 @@ app.post('/create/form/motor', validateMotor, wrapAsync(async (req, res, next) =
 // menuju ke halaman edit 
 app.get('/motors/:id/edit',wrapAsync(async(req,res)=>{
     const motor = await Motor.findById(req.params.id);
-    res.render('pages/editForm', {motor})
+    res.send('halaman edit');
+    res.json({message: 'Halaman edit', motor})
 }))
 // mengupdate data motor berdasarkan ID dalam bentuk JSON
 app.put('/motors/:id/edit/update', validateMotor, wrapAsync(async (req, res) => {
