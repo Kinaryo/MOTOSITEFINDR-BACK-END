@@ -74,10 +74,11 @@ app.get('/allMotors', wrapAsync(async (req, res) => {
     res.json({ motors });
 }));
 
-// Endpoint untuk mendapatkan detail motor berdasarkan ID dalam bentuk JSON
+// mendapatkan detail motor berdasarkan ID dalam bentuk JSON
 app.get('/motors/:id', wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const motor = await Motor.findById(id);
+    const motor = await Motor.findById(id).populate('comments');
+
     res.json({ motor });
 }));
 
@@ -105,7 +106,7 @@ app.put('/motors/:id/edit/update', validateMotor, wrapAsync(async (req, res) => 
     res.json({ message: 'Motor updated successfully', motor });
 }));
 
-// Endpoint untuk menghapus data motor berdasarkan ID dalam bentuk JSON
+// menghapus data motor berdasarkan ID dalam bentuk JSON
 app.delete('/motors/:id', wrapAsync(async (req, res) => {
     await Motor.findByIdAndDelete(req.params.id);
     res.json({ message: 'Motor deleted successfully' });
@@ -120,7 +121,13 @@ app.post('/motors/:id/comments', validateComment, wrapAsync(async (req, res) => 
     await motor.save();
     res.json({ message: 'Success add comment', motor });
 }));
-
+//  routes hapus komentar 
+app.delete('/motors/:motor_id/comments/:comment_id', wrapAsync(async (req, res) => {
+    const { motor_id, comment_id } = req.params;
+    await Motor.findByIdAndUpdate(motor_id, { $pull: { comments: { _id: comment_id } } });
+    await Comment.findByIdAndDelete(comment_id);
+    res.json({message: `Success Delete Comment`, motor})
+}));
 app.all('*', (req, res, next) => {
     next(new ErrorHandler('Page not Found', 404));
 });
