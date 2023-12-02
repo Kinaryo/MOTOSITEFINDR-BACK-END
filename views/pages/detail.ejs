@@ -1,0 +1,41 @@
+<% layout('layouts/app') %>
+
+<div class="container mt-2 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <img src="<%= motor.image %>" alt="<%= motor.title %>" class="img-fluid mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><%= motor.title %></h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>License Plate:</strong> <%= motor.licensePlate %></li>
+                    <li class="list-group-item"><strong>Model:</strong> <%= motor.model %></li>
+                    <li class="list-group-item"><strong>Date - Time:</strong> <%= motor.dateTime %></li>
+                </ul>
+                <div class="card-body">
+                    <h5 class="card-title">Description</h5>
+                    <p class="card-text"><%= motor.description %></p>
+                </div>
+                <div class="card-body">
+                    <a href="/pages/<%= motor._id %>/editForm" class="btn btn-warning text-white">Edit</a>
+                    <form action="/pages/<%= motor._id %>?_method=DELETE" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="border p-3 rounded">
+                <h3>Comments</h3>
+                <form action="/pages<%= motor._id %>/comments" method="POST">
+                <div class="form-group">
+                    <textarea name="comment[body]" id="body" cols="20" rows="5" class="form-control" placeholder="komentar..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success mt-2">Send</button>
+            </form>
+            </div>
+        </div>
+        
+    </div>
+</div>

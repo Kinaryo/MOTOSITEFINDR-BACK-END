@@ -1,0 +1,58 @@
+<% layout('layouts/app') %>
+
+<body>
+    <div class="container">
+        <a href="/pages/post" class="btn btn-primary mb-3">Add Motor</a>
+        <h1 class="mb-4">All Motors</h1>
+
+        <form action="/pages" method="GET" class="mb-4" id="filterForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="search">Search:</label>
+                    <input type="text" name="search" id="search" class="form-control" placeholder="Search...">
+                </div>
+                <div class="col-md-3">
+                    <label for="sortBy">Sort By:</label>
+                    <select name="sortBy" id="sortBy" class="form-control">
+                        <option value=""></option>
+                        <option value="all">All</option> <!-- Added "All" option -->
+                        <option value="terbaru">Terbaru</option>
+                        <option value="terlama">Terlama</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                </div>
+            </div>
+        </form>
+
+        <% motors.forEach(motor => { %>
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="<%= motor.image %>" alt="<%= motor.title %>" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= motor.title %></h5>
+                            <p class="card-text"><%= motor.licensePlate %></p>
+                            <p class="card-text"><%= motor.model %></p>
+                            <p class="card-text"><%= motor.dateTime %></p>
+                            <p class="card-text"><%= motor.description %></p>
+                            <a href="/pages/<%= motor._id %>/" class="btn btn-primary">View <%= motor.title %></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+
+    <script>
+        // Add a script to reset the form fields on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('filterForm').reset();
+        });
+    </script>
+</body>
+
+</html>

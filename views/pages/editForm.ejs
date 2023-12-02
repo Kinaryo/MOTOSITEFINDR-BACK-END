@@ -1,0 +1,64 @@
+<% layout('layouts/app') %>
+<h1 class="text-center">Update</h1>
+<div class="container">
+    <h1 class="text-center mt-5">Edit Motor</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="/pages/<%= motor._id %>/?_method=PUT" method="POST" class="validated-form" novalidate>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" name="motor[title]" id="title" value="<%= motor.title %>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="licensePlate" class="form-label">License Plate</label>
+                    <input type="text" class="form-control" name="motor[licensePlate]" value="<%= motor.licensePlate %>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="model" class="form-label">Model</label>
+                    <input type="text" class="form-control" name="motor[model]" value="<%= motor.model %>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea id="description" class="form-control" name="motor[description]" required><%= motor.description %></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dateTime" class="form-label">Date - Time</label>
+                    <input type="datetime-local" class="form-control" name="motor[dateTime]" id="dateTime" value="<%= motor.dateTime %>" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image URL</label>
+                    <input type="text" class="form-control" name="motor[image]" value="<%= motor.image %>" required>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    (() => {
+      'use strict'
+    
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.validated-form')
+    
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+    
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+    </script>

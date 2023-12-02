@@ -1,0 +1,5 @@
+CRUD
+ADD : /pages/post
+Detail : /pages/:id
+Edit : /pages/:id/editForm
+ALL : /pages
