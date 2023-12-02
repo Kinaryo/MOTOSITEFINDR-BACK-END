@@ -50,6 +50,41 @@ app.get('/home', (req, res) => {
 
 app.use('/motors',require('./routes/motor'))
 
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+  }
+
+  app.get('/pages/search', wrapAsync(async (req, res) => {
+      let motors;
+
+      // Handling search
+      if (req.query.search) {
+        const searchRegex = new RegExp(escapeRegex(req.query.search), 'gi');
+        motors = await Motor.find({ title: searchRegex });
+      } else {
+        // Handling filter
+        if (req.query.sortBy === 'terbaru') {
+          motors = await Motor.find().sort({ dateTime: -1 });
+        } else if (req.query.sortBy === 'terlama') {
+          motors = await Motor.find().sort({ dateTime: 1 });
+        } else {
+          motors = await Motor.find();
+        }
+      }
+    //   Mengirim data sebagai JSON
+      res.json({ motors });
+    })
+  );
+
+
+
+
+
+
+
+
+
+
 const validateComment = (req, res, next) => {
     const { error } = commentSchema.validate(req.body);
     if (error) {
