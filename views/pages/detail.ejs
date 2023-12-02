@@ -1,9 +1,65 @@
 <% layout('layouts/app') %>
+<style>
+    .comment-container {
+        margin-top: 20px;
+    }
+
+    .comment-card {
+        margin-bottom: 15px;
+    }
+
+    .comment-date {
+        font-size: 12px;
+        color: #888;
+    }
+
+    .send-button {
+        background-color: #28a745;
+        color: #fff;
+    }
+</style>
+
 
 <div class="container mt-2 mb-5">
+    
     <div class="row justify-content-center">
         <div class="col-6">
-            <img src="<%= motor.image %>" alt="<%= motor.title %>" class="img-fluid mb-3">
+            
+                <p><strong> <%= motor.author.username %></strong></p>
+            <div class="card">
+
+                <div id="carouselExample" class="carousel slide">
+                    <div class="carousel-inner">
+                        <% motor.images.forEach((image, index)=>{ %>
+                      <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                        <img src="/images/<%= image.filename %>" class="d-block w-100" alt="<%= motor.title %>">
+                      </div>
+                      <% }) %>
+                    </div>
+
+                    <% if(motor.images.length > 1){ %>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                    <% } %>
+                  </div>
+
+
+
+
+
+
+               
+                  
+                  
+               
+            </div>
+           
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"><%= motor.title %></h5>
@@ -17,25 +73,53 @@
                     <h5 class="card-title">Description</h5>
                     <p class="card-text"><%= motor.description %></p>
                 </div>
+                <% if(currentUser && motor.author.equals(currentUser._id)) {%>
                 <div class="card-body">
                     <a href="/pages/<%= motor._id %>/editForm" class="btn btn-warning text-white">Edit</a>
                     <form action="/pages/<%= motor._id %>?_method=DELETE" method="POST" style="display: inline;">
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
+                <% } %>
             </div>
         </div>
         <div class="col-6">
             <div class="border p-3 rounded">
                 <h3>Comments</h3>
-                <form action="/pages<%= motor._id %>/comments" method="POST">
+                <form action="/pages/<%= motor._id %>/comments" method="POST" class="validated-form" novalidate>
                 <div class="form-group">
-                    <textarea name="comment[body]" id="body" cols="20" rows="5" class="form-control" placeholder="komentar..."></textarea>
+                    <textarea name="comment[body]" id="body" cols="20" rows="5" class="form-control" placeholder="komentar..." required></textarea>
+               
                 </div>
-                <button type="submit" class="btn btn-success mt-2">Send</button>
+                <!-- elemen HTML -->
+            <button type="submit" class="btn btn-success mt-2 " style="display: flex; justify-content: flex-end;">Send</button>
+
             </form>
+            <div class="card py-3 px-4 mt-2">
+            <% for (const comment of motor.comments) { %>
+                <div class="card mb-3 comment-card">
+                    <div class="card-body">
+                        <h5 class="card-text"><%= comment.body %></h5>
+                        <div class="comment-date">
+                            <%= comment.getShortFormattedDate() %>
+                        </div>
+                        <% if(currentUser && comment.author.equals(currentUser._id)){ %>
+                        <form action="/pages/<%= motor._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display:inline!important">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+                
+            <% }  %>
+        </div>
             </div>
         </div>
         
     </div>
 </div>
+
+
+
+
+

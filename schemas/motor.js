@@ -7,6 +7,5 @@ module.exports.motorSchema = Joi.object({
         model: Joi.string().required(),
         description: Joi.string().required(),
         dateTime: Joi.string().required(),
-        image: Joi.string().required(),
     }).required(),
 });

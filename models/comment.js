@@ -1,12 +1,23 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 const commentSchema = new Schema({
-    body : String,
+    body: String,
     dateTime: {
-        type: Date, // Pastikan tipe datanya adalah Date
+        type: Date,
         default: Date.now,
-      }
+    },
+    author:{
+        type:Schema.Types.ObjectId,
+        ref:'User'
+    }
 
-})
+});
 
-module.exports=mongoose.model('Comment',commentSchema)
+// Menambahkan metode untuk mendapatkan tanggal format singkat
+commentSchema.methods.getShortFormattedDate = function() {
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    return this.dateTime.toLocaleDateString('en-US', options);
+};
+
+module.exports = mongoose.model('Comment', commentSchema);

@@ -3,7 +3,7 @@
     <h1 class="text-center mt-5">Add Motor</h1>
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <form action="/pages" method="POST" class="validated-form" novalidate>
+            <form action="/pages" method="POST" class="validated-form" novalidate enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input type="text" class="form-control" name="motor[title]" id="title" required>
@@ -36,8 +36,10 @@
                 </div>
         
                 <div class="mb-3">
-                    <label for="image" class="form-label">Image URL</label>
-                    <input type="text" class="form-control" name="motor[image]" required>
+                    <label for="image" class="form-label">Image</label>
+                    <input type="file" id="image" class="form-control" name="image" accept="image/*" required multiple>
+
+
                 </div>
         
                 <div class="mb-3">
@@ -48,23 +50,3 @@
     </div>
 </div>
 
-<script>
-(() => {
-  'use strict'
-
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  const forms = document.querySelectorAll('.validated-form')
-
-  // Loop over them and prevent submission
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
-</script>
