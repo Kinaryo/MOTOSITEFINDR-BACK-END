@@ -10,10 +10,6 @@ const app = express();
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
-// models
-const User =require('./models/user')
-// connect to mngodb
-
 const PORT = process.env.PORT || 3000;
 
 mongoose.set('strictQuery', false);
@@ -31,6 +27,17 @@ const connectDB = async () => {
     }
 };
 
+
+
+// models
+const User =require('./models/user')
+// connect to mngodb
+mongoose.connect('mongodb://127.0.0.1/motositefinder')
+.then((result)=>{
+    console.log('connected to mongodb')
+}).catch((err)=>{
+    console.log(err)
+})
 
 app.engine('ejs',ejsMate)
 app.set('view engine','ejs');
@@ -96,6 +103,10 @@ app.use((err,req,res,next)=>{
     res.status(statusCode).render('error',{err})
 
 })
+app.listen(5000,()=>{
+    console.log(`server is running on http://127.0.0.1:5000`)
+})
+
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Listening On Port ${PORT}`);
