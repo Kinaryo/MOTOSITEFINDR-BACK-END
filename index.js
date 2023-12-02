@@ -46,6 +46,18 @@ const validateMotor = (req, res, next) => {
     }
 };
 
+const validateComment = (req,res,next)=>{
+    const {error} = commentSchema.validate(req.body)
+    if(error){
+        const msg = error.details.map(el => el.message).join(',')
+        console.log(error)
+        return next(new ErrorHandler(error.details[0].message,400))
+    }else{
+        next()
+    }
+}
+
+
 // server route/landing page 
 app.get('/',(req,res)=>{
     res.send('Server Motositefinder')
@@ -92,11 +104,24 @@ app.put('/motors/:id/edit/update', validateMotor, wrapAsync(async (req, res) => 
 }));
 
 // Endpoint untuk menghapus data motor berdasarkan ID dalam bentuk JSON
-app.delete('/api/motors/:id', wrapAsync(async (req, res) => {
+app.delete('/motors/:id', wrapAsync(async (req, res) => {
     await Motor.findByIdAndDelete(req.params.id);
     res.json({ message: 'Motor deleted successfully' });
 }));
 
+
+
+
+//  routes komentar
+app.post('motors/:id/comments',validateComment, wrapAsync(async( req,res)=>{
+    const comment = new Comment(req.body.comment);
+    const motor = await Motor.findById(req.params.id);
+    motor.comments.push(comment);
+    await comment.save();
+    await motor.save()
+    res.json({'succes add comment',motor})
+
+}))
 app.all('*',(req,res,next)=>{
     next(new ErrorHandler('Page not Faund',404))
 })
