@@ -47,7 +47,7 @@ const validateMotor = (req, res, next) => {
 };
 
 app.get('/', (req, res) => {
-    res.send('berhasil');
+    res.send('berhasil MotositeFindr');
 });
 
 function escapeRegex(text) {
