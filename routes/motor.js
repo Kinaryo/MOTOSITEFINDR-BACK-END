@@ -51,7 +51,7 @@ router.get('/Searchpages', wrapAsync(async (req, res) => {
 router.get('/', wrapAsync(async (req, res) => {
     const motors = await Motor.find();
     const msg = req.flash('succes_msg','motor fetched successfully')
-    res.json({ motors });
+    res.json({msg, motors });
 }));
 
 // mendapatkan detail motor berdasarkan ID dalam bentuk JSON
