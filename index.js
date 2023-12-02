@@ -70,7 +70,7 @@ app.get('/motors/:id', wrapAsync(async (req, res) => {
 }));
 
 app.get('/create/form', (req,res)=>{
-    res.send('halaman edit')
+    res.json({message: 'Halaman edit', motor})
 })
 // menambahkan data motor baru dalam bentuk JSON
 app.post('/create/form/motor', validateMotor, wrapAsync(async (req, res, next) => {
