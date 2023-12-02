@@ -29,6 +29,7 @@ const connectDB = async () => {
 const Motor = require('./models/motor');
 const Comment = require('./models/comment');
 const { motorSchema } = require('./schemas/motor');
+const { commentSchema} = require('.schemas/comment'
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
