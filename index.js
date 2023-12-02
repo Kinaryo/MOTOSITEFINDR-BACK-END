@@ -38,8 +38,18 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+// Server route/landing page
+app.get('/', (req, res) => {
+    res.send('Server Motositefinder');
+});
+
+// Halaman home
+app.get('/home', (req, res) => {
+    res.send('home');
+});
 
 app.use('/motors',require('./routes/motor'))
+
 const validateComment = (req, res, next) => {
     const { error } = commentSchema.validate(req.body);
     if (error) {
