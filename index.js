@@ -49,32 +49,7 @@ app.get('/home', (req, res) => {
 });
 
 app.use('/motors',require('./routes/motor'))
-
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-  }
-
-  app.get('/Searchpages', wrapAsync(async (req, res) => {
-      let motors;
-
-      // Handling search
-      if (req.query.search) {
-        const searchRegex = new RegExp(escapeRegex(req.query.search), 'gi');
-        motors = await Motor.find({ title: searchRegex });
-      } else {
-        // Handling filter
-        if (req.query.sortBy === 'terbaru') {
-          motors = await Motor.find().sort({ dateTime: -1 });
-        } else if (req.query.sortBy === 'terlama') {
-          motors = await Motor.find().sort({ dateTime: 1 });
-        } else {
-          motors = await Motor.find();
-        }
-      }
-    //   Mengirim data sebagai JSON
-      res.json({ motors });
-    })
-  );
+app.use('/motors/:motor_id/comments',require('./routes/comment'))
 
 
 
@@ -82,36 +57,6 @@ function escapeRegex(text) {
 
 
 
-
-
-
-const validateComment = (req, res, next) => {
-    const { error } = commentSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',');
-        console.log(error);
-        return next(new ErrorHandler(msg, 400));
-    } else {
-        next();
-    }
-};
-
-// Routes komentar
-app.post('/motors/:id/comments', validateComment, wrapAsync(async (req, res) => {
-    const comment = new Comment(req.body.comment);
-    const motor = await Motor.findById(req.params.id);
-    motor.comments.push(comment);
-    await comment.save();
-    await motor.save();
-    res.json({ message: 'Success add comment', motor });
-}));
-//  routes hapus komentar 
-app.delete('/motors/:motor_id/comments/:comment_id', wrapAsync(async (req, res) => {
-    const { motor_id, comment_id } = req.params;
-    await Motor.findByIdAndUpdate(motor_id, { $pull: { comments: { _id: comment_id } } });
-    await Comment.findByIdAndDelete(comment_id);
-    res.json({message: `Success Delete Comment`, motor})
-}));
 app.all('*', (req, res, next) => {
     next(new ErrorHandler('Page not Found', 404));
 });
