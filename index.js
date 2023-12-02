@@ -46,87 +46,38 @@ const validateMotor = (req, res, next) => {
     }
 };
 
-app.get('/', (req, res) => {
-    res.send('berhasil');
-});
-
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
-
-app.get('/pages', wrapAsync(async (req, res) => {
-    let motors;
-
-    if (req.query.search) {
-        const searchRegex = new RegExp(escapeRegex(req.query.search), 'gi');
-        motors = await Motor.find({ title: { $regex: searchRegex, $options: 'i' } });
-    } else {
-        if (req.query.sortBy === 'terbaru') {
-            motors = await Motor.find().sort({ dateTime: -1 });
-        } else if (req.query.sortBy === 'terlama') {
-            motors = await Motor.find().sort({ dateTime: 1 });
-        } else {
-            motors = await Motor.find();
-        }
-    }
-
-    res.render('pages/index', { motors });
-}));
-
-app.get('/pages', wrapAsync(async (req, res) => {
+// Endpoint untuk mendapatkan semua data motor dalam bentuk JSON
+app.get('/api/motors', wrapAsync(async (req, res) => {
     const motors = await Motor.find();
-    res.render('pages/index', { motors });
+    res.json({ motors });
 }));
 
-app.get('/pages/post', (req, res) => {
-    res.render('pages/post');
-});
-
-app.post('/pages', validateMotor, wrapAsync(async (req, res, next) => {
-    const motor = new Motor(req.body.motor);
-    await motor.save();
-    res.redirect('/pages');
-}));
-
-app.get('/pages/:id', wrapAsync(async (req, res) => {
+// Endpoint untuk mendapatkan detail motor berdasarkan ID dalam bentuk JSON
+app.get('/api/motors/:id', wrapAsync(async (req, res) => {
     const { id } = req.params;
     const motor = await Motor.findById(id);
-    res.render('pages/detail', { motor });
+    res.json({ motor });
 }));
 
-app.get('/pages/:id/editForm', wrapAsync(async (req, res) => {
-    const motor = await Motor.findById(req.params.id);
-    res.render('pages/editForm', { motor });
+// Endpoint untuk menambahkan data motor baru dalam bentuk JSON
+app.post('/api/motors', validateMotor, wrapAsync(async (req, res, next) => {
+    const motor = new Motor(req.body.motor);
+    await motor.save();
+    res.json({ message: 'Motor added successfully', motor });
 }));
 
-app.put('/pages/:id', validateMotor, wrapAsync(async (req, res) => {
+// Endpoint untuk mengupdate data motor berdasarkan ID dalam bentuk JSON
+app.put('/api/motors/:id', validateMotor, wrapAsync(async (req, res) => {
     const { id } = req.params;
     const motor = await Motor.findByIdAndUpdate(id, { ...req.body.motor });
-    res.redirect('/pages');
+    res.json({ message: 'Motor updated successfully', motor });
 }));
 
-app.delete('/pages/:id', wrapAsync(async (req, res) => {
+// Endpoint untuk menghapus data motor berdasarkan ID dalam bentuk JSON
+app.delete('/api/motors/:id', wrapAsync(async (req, res) => {
     await Motor.findByIdAndDelete(req.params.id);
-    res.redirect('/pages');
+    res.json({ message: 'Motor deleted successfully' });
 }));
-
-app.post('/pages/:id/comments', wrapAsync(async (req, res) => {
-    const comment = new Comment(req.body.comment);
-    const motor = await Motor.findById(req.params.id);
-    motor.comments.push(comment);
-    await comment.save();
-    await motor.save();
-    res.redirect(`/pages/${req.params.id}`);
-}));
-
-app.all('*', (req, res, next) => {
-    next(new ErrorHandler('Page not Found', 404));
-});
-
-app.use((err, req, res, next) => {
-    const { statusCode = 500, message = "Oh no, something went wrong" } = err;
-    res.status(statusCode).render('error', { err: { message } });
-});
 
 connectDB().then(() => {
     app.listen(PORT, () => {
