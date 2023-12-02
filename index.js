@@ -84,6 +84,18 @@ app.delete('/api/motors/:id', wrapAsync(async (req, res) => {
     res.json({ message: 'Motor deleted successfully' });
 }));
 
+app.all('*',(req,res,next)=>{
+    next(new ErrorHandler('Page not Faund',404))
+})
+
+// middleware untuk menangani suatu error
+app.use((err,req,res,next)=>{
+    const {statusCode = 500 } = err;
+    if(!err.message) err.message = "oh no, Something went wrong"
+    res.status(statusCode).render('error',{err})
+
+})
+
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`Listening On Port ${PORT}`);
