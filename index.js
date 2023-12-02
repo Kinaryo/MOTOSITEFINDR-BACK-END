@@ -54,7 +54,7 @@ function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
   }
 
-  app.get('/pages/search', wrapAsync(async (req, res) => {
+  app.get('/Searchpages', wrapAsync(async (req, res) => {
       let motors;
 
       // Handling search
