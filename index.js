@@ -76,6 +76,7 @@ app.get('/home', (req, res) => {
     res.send('home');
 });
 
+app.use('/',require('./routes/auth') )
 app.use('/motors',require('./routes/motor'))
 app.use('/motors/:motor_id/comments',require('./routes/comment'))
 
