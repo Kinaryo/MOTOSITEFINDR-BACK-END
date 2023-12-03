@@ -9,8 +9,10 @@ const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
+
 const wrapAsync = require('./utils/wrapAsync');
 const isValidObjectId = require('./middlewares/isValidObjectId')
+
 
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
@@ -38,6 +40,7 @@ const Comment = require('./models/comment');
 const { motorSchema } = require('./schemas/motor');
 const { commentSchema } = require('./schemas/comment'); // Fixed import path
 
+app.use(cors());
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
