@@ -53,10 +53,10 @@ module.exports.form = (req, res) => {
 };
 
 module.exports.store = async (req, res) => {
-  const images = req.files.map(file =>({
-    url : file.path,
-    filename : file.filename,
-}))
+//   const images = req.files.map(file =>({
+//     url : file.path,
+//     filename : file.filename,
+// }))
     const motor = new Motor(req.body.motor);
     motor.author = req.user._id;
     motor.images = images
