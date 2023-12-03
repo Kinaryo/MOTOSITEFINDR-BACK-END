@@ -1,13 +1,13 @@
-const User = require('../models/user')
+const User = require('../models/user');
 
-module.exports.registerForm =  async (req, res) => {
+module.exports.registerForm = async (req, res) => {
     res.status(200).json({ message: 'Render registration form' });
 }
 
 module.exports.register = async (req, res) => {
     try {
-        const { email, username, password } = req.body;
-        const user = new User({ email, username });
+        const { email, username, password, name } = req.body; // Menambahkan name dari req.body
+        const user = new User({ email, username, name }); // Menambahkan name ke objek user
         const registerUser = await User.register(user, password);
 
         req.login(registerUser, (err) => {
