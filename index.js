@@ -1,6 +1,7 @@
 const ejsMate = require('ejs-mate');
 require('dotenv').config();
 const express = require('express');
+const cors = ('cors')
 const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
