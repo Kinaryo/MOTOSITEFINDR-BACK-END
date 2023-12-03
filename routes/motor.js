@@ -1,7 +1,7 @@
 const express = require('express');
 const wrapAsync = require('../utils/wrapAsync');
 const ErrorHandler = require('../utils/ErrorHandler');
-const isValidObjectId = require('../middleware/isValidObjectId')
+const isValidObjectId = require('../middlewares/isValidObjectId')
 const isAuth = require('../middlewares/isAuth')
 // model
 const Motor = require('../models/motor');
