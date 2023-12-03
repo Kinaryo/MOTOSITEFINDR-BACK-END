@@ -5,11 +5,11 @@ const isValidObjectId = require('../middlewares/isValidObjectId')
 const isAuth = require('../middlewares/isAuth')
 // model
 const Motor = require('../models/motor');
-
+const router = express.Router();
 // schema
 const { motorSchema } = require('../schemas/motor');
 
-const router = express.Router();
+
 
 const validateMotor = (req, res, next) => {
     const { error } = motorSchema.validate(req.body);
@@ -58,7 +58,7 @@ router.get('/', wrapAsync(async (req, res) => {
 // mendapatkan detail motor berdasarkan ID dalam bentuk JSON
 router.get('/:id',isValidObjectId('/motors'),wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const motor = await Motor.findById(id).populate('comments');
+    const motor = await Motor.findById(id).populate('comments').populate('author')
     res.json({ motor });
 }));
 
@@ -69,6 +69,7 @@ router.get('/create/form', isAuth, (req, res) => {
 // Menambahkan data motor baru dalam bentuk JSON
 router.post('/create/form/motor',isAuth, validateMotor, wrapAsync(async (req, res) => {
     const motor = new Motor(req.body.motor);
+    motor.author = req.user._id;
     await motor.save();
     req.flash('success_msg','Selamat, anda berhasil menambahkan data')
     res.json({ message: 'Motor added successfully', motor });
