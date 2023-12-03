@@ -53,22 +53,22 @@ router.get('/Searchpages', wrapAsync(async (req, res) => {
 router.get('/', wrapAsync(async (req, res) => {
   const {id} = req.params
   const motors = await Motor.findById(id)
-  .populate({
-    path : 'comments',
-    populate:{
-      path:'author'
-    }
-  })
-  .populate('author')
-console.log(motors)
-    const msg = req.flash('succes_msg','motor fetched successfully')
-    res.json({msg, motors });
+   const msg = req.flash('succes_msg','motor fetched successfully')
+   res.json({msg, motors });
 }));
 
 // mendapatkan detail motor berdasarkan ID dalam bentuk JSON
 router.get('/:id',isValidObjectId('/motors'),wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const motor = await Motor.findById(id).populate('comments').populate('author')
+    const motor = await Motor.findById(id)
+    .populate({
+      path : 'comments',
+      populate:{
+        path:'author'
+      }
+    })
+    .populate('author')
+console.log(motor)
     res.json({ motor });
 }));
 
