@@ -2,6 +2,7 @@ const express = require('express');
 const wrapAsync = require('../utils/wrapAsync')
 const isValidObjectId = require('../middlewares/isValidObjectId')
 const ErrorHandler = require('../utils/ErrorHandler')
+const isAuth = require('../middlewares/isAuth')
 
 //modelss
 const Motor = require('../models/motor')
@@ -23,7 +24,7 @@ const validateComment = (req,res,next)=>{
 }
 
 //bagian komentar
-router.post('/', isValidObjectId('/motors'),validateComment, wrapAsync(async (req, res) => {
+router.post('/',isAuth, isValidObjectId('/motors'),validateComment, wrapAsync(async (req, res) => {
     const comment = new Comment(req.body.comment);
     const motor = await Motor.findById(req.params.id);
     motor.comments.push(comment);
@@ -34,7 +35,7 @@ router.post('/', isValidObjectId('/motors'),validateComment, wrapAsync(async (re
 }));
 
 // menghapus komentar 
-router.delete('/motors/:motor_id/comments/:comment_id', isValidObjectId('/motors'),wrapAsync(async (req, res) => {
+router.delete('/motors/:motor_id/comments/:comment_id', isAuth,isValidObjectId('/motors'),wrapAsync(async (req, res) => {
     const { motor_id, comment_id } = req.params;
     await Motor.findByIdAndUpdate(motor_id, { $pull: { comments: { _id: comment_id } } });
     await Comment.findByIdAndDelete(comment_id);

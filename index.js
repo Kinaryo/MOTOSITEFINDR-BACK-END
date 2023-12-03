@@ -11,6 +11,13 @@ const app = express();
 const wrapAsync = require('./utils/wrapAsync');
 const isValidObjectId = require('./middlewares/isValidObjectId')
 
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+
+// models
+const User =require('./models/user')
+
+
 const PORT = process.env.PORT || 3000;
 
 mongoose.set('strictQuery', false);
@@ -41,6 +48,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()))
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+
+
+
+
+
+
+
 app.use((req,res,next)=>{
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg')

@@ -2,6 +2,7 @@ const express = require('express');
 const wrapAsync = require('../utils/wrapAsync');
 const ErrorHandler = require('../utils/ErrorHandler');
 const isValidObjectId = require('../middleware/isValidObjectId')
+const isAuth = require('../middlewares/isAuth')
 // model
 const Motor = require('../models/motor');
 
@@ -61,12 +62,12 @@ router.get('/:id',isValidObjectId('/motors'),wrapAsync(async (req, res) => {
     res.json({ motor });
 }));
 
-router.get('/create/form', (req, res) => {
+router.get('/create/form', isAuth, (req, res) => {
     res.json({ message: 'Halaman edit' });
 });
 
 // Menambahkan data motor baru dalam bentuk JSON
-router.post('/create/form/motor', validateMotor, wrapAsync(async (req, res) => {
+router.post('/create/form/motor',isAuth, validateMotor, wrapAsync(async (req, res) => {
     const motor = new Motor(req.body.motor);
     await motor.save();
     req.flash('success_msg','Selamat, anda berhasil menambahkan data')
@@ -74,20 +75,20 @@ router.post('/create/form/motor', validateMotor, wrapAsync(async (req, res) => {
 }));
 
 // Menuju ke halaman edit
-router.get('/:id/edit',isValidObjectId('/motors'),wrapAsync(async (req, res) => {
+router.get('/:id/edit',isAuth, isValidObjectId('/motors'),wrapAsync(async (req, res) => {
     const motor = await Motor.findById(req.params.id);
     res.json({ message: 'Halaman edit', motor });
 }));
 
 // Mengupdate data motor berdasarkan ID dalam bentuk JSON
-router.put('/:id/edit/update',isValidObjectId('/motors'), validateMotor, wrapAsync(async (req, res) => {
+router.put('/:id/edit/update',isAuth,isValidObjectId('/motors'), validateMotor, wrapAsync(async (req, res) => {
     const { id } = req.params;
     const motor = await Motor.findByIdAndUpdate(id, { ...req.body.motor });
     res.json({ message: 'Motor updated successfully', motor });
 }));
 
 // menghapus data motor berdasarkan ID dalam bentuk JSON
-router.delete('/:id',isValidObjectId('/motors'), wrapAsync(async (req, res) => {
+router.delete('/:id',isAuth,isValidObjectId('/motors'), wrapAsync(async (req, res) => {
     await Motor.findByIdAndDelete(req.params.id);
     res.json({ message: 'Motor deleted successfully' });
 }));
