@@ -52,8 +52,8 @@ router.get('/Searchpages', wrapAsync(async (req, res) => {
 // Endpoint untuk mendapatkan semua data motor dalam bentuk JSON
 router.get('/', wrapAsync(async (req, res) => {
   const {id} = req.params
-  const motors = await Motor.findById(id)
-   const msg = req.flash('succes_msg','motor fetched successfully')
+  const motors = await Motor.find(id)
+  const msg = req.flash('succes_msg','motor fetched successfully')
    res.json({msg, motors });
 }));
 
