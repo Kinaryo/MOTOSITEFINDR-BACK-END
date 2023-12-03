@@ -62,6 +62,7 @@ passport.deserializeUser(User.deserializeUser())
 
 
 app.use((req,res,next)=>{
+    res.locals.currentUser = req.user;
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg')
     next();
@@ -76,7 +77,7 @@ app.get('/home', (req, res) => {
     res.send('home');
 });
 
-app.use('/auth',require('./routes/auth') )
+app.use('/',require('./routes/auth') )
 app.use('/motors',require('./routes/motor'))
 app.use('/motors/:motor_id/comments',require('./routes/comment'))
 

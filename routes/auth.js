@@ -13,7 +13,13 @@ router.post('/register', wrapAsync(async (req, res) => {
     try {
         const { email, username, password } = req.body;
         const user = new User({ email, username });
-        await User.register(user, password);
+        const registerUser = await User.register(user, password)
+        req.login(registerUser,(err)=>{
+            if(err) return next(err);
+              req.flash('success_msg','register berhasil anda berhasil login')
+            res.redirect('/motors')
+        })
+              
         res.status(200).json({ success: true, message: 'Registration successful' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -38,7 +44,7 @@ router.post('/logout',(req,res)=>{
     req.logout(function(err){
         if (err){return next(err)}
         req.flash('success_msg','anda berhasil logout')
-        res.redirect('pages')
+        res.redirect('/motors')
     })
 })
 module.exports = router;
