@@ -15,7 +15,7 @@ module.exports.store = async (req, res) => {
     res.json({ message: 'Success add comment', motor });
 }
 
-module.export.destroy = async (req, res) => {
+module.exports.destroy = async (req, res) => {
     const { motor_id, comment_id } = req.params;
     await Motor.findByIdAndUpdate(motor_id, { $pull: { comments: { _id: comment_id } } });
     await Comment.findByIdAndDelete(comment_id);
