@@ -2,6 +2,7 @@ const express = require('express');
 const router = express();
 const User = require('../models/user');
 const wrapAsync = require('../utils/wrapAsync');
+const { route } = require('./motor');
 const passport = require('passport');
 
 // Register
