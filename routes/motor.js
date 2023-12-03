@@ -5,6 +5,7 @@ const ErrorHandler = require('../utils/ErrorHandler');
 const isValidObjectId = require('../middlewares/isValidObjectId')
 const isAuth = require('../middlewares/isAuth')
 const isAuthor = require('../middlewares/isAuthor')
+const upload = require('../config/multer')
 const {isAuthorMotor}  = require('../middlewares/isAuthor')
 const {validateMotor} = require('../middlewares/validator')
 // model
@@ -23,11 +24,11 @@ router.get('/:id',isValidObjectId('/motors'),wrapAsync(constrollersMotor.detail)
 // menuju halaman new data motor 
 router.get('/create/form', isAuth, constrollersMotor.form ) 
 // Menambahkan data motor baru dalam bentuk JSON
-router.post('/create/form/motor',isAuth, validateMotor, wrapAsync(constrollersMotor.store));
+router.post('/create/form/motor',isAuth,upload.array('image',5), validateMotor, wrapAsync(constrollersMotor.store));
 // masuk halaman edit
 router.get('/:id/edit',isAuth,isAuthorMotor, isValidObjectId('/motors'),wrapAsync(constrollersMotor.edit))
 // Mengupdate data motor berdasarkan ID dalam bentuk JSON
-router.put('/:id/edit/update',isAuth,isAuthorMotor,isValidObjectId('/motors'), validateMotor, wrapAsync(constrollersMotor.update));
+router.put('/:id/edit/update',isAuth,upload.array('image',5),isAuthorMotor,isValidObjectId('/motors'), validateMotor, wrapAsync(constrollersMotor.update));
 // menghapus data motor berdasarkan ID dalam bentuk JSON
 router.delete('/:id',isAuth,isAuthorMotor,isValidObjectId('/motors'), wrapAsync(constrollersMotor.destroy));
 

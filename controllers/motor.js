@@ -1,4 +1,6 @@
 const Motor = require('../models/motor')
+const fs = require('fs')
+const ExpressError = require('../utils/ErrorHandler')
 
 module.exports.index = async (req, res) => {
     const {id} = req.params
@@ -51,8 +53,13 @@ module.exports.form = (req, res) => {
 };
 
 module.exports.store = async (req, res) => {
+  const images = req.files.map(file =>({
+    url : file.path,
+    filename : file.filename,
+}))
     const motor = new Motor(req.body.motor);
     motor.author = req.user._id;
+    motor.images = images
     await motor.save();
     req.flash('success_msg','Selamat, anda berhasil menambahkan data')
     res.json({ message: 'Motor added successfully', motor });
@@ -64,14 +71,34 @@ module.exports.edit = async (req, res) => {
 };
 
 module.exports.update = async (req, res) => {
-    const { id } = req.params;
-    const motor = await Motor.findByIdAndUpdate(id, { ...req.body.motor });
+  const {id} = req.params
+  const motor =  await Motor.findByIdAndUpdate(id,{...req.body.motor})
+
+  if(req.files && req.files.length >0 ){
+      motor.images.forEach(image =>{
+     fs.unlink(image.url, err => new ExpressError(err))
+   })
+       const images = req.files.map(file =>({
+       url : file.path,
+       filename: file.filename
+   }));
+
+   motor.images = images;
+   await motor.save();
+  }
     req.flash('success_msg','Anda berhasil meng-update data');
     res.json({ message: 'Motor updated successfully', motor });
 }
 
 module.exports.destroy = async (req, res) => {
-    await Motor.findByIdAndDelete(req.params.id);
-    const msg = req.flash('success_msg','Data berhasil dihapus');
+  const {id} = req.params
+  const motor =  await Motor.findById(id)
+  if(motor.images.length >0 ){
+    motor.images.forEach(image =>{
+      fs.unlink(image.url, err => new ExpressError(err))
+    })
+   }
+   await motor.deleteOne();
+   req.flash('success_msg','Data berhasil dihapus')
     res.json({ message: 'Motor deleted successfully' });
 }
