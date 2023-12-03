@@ -2,21 +2,18 @@ const ejsMate = require('ejs-mate');
 require('dotenv').config();
 const express = require('express');
 const ErrorHandler = require('./utils/ErrorHandler');
-const Joi = require('joi');
-const flash = require('connect-flash')
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
 const wrapAsync = require('./utils/wrapAsync');
-const isValidObjectId = require('./middlewares/isValidObjectId')
-
-const passport = require('passport')
-const LocalStrategy = require('passport-local')
+const isValidObjectId = require('./middlewares/isValidObjectId');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const flash = require('connect-flash');
 
 // models
-const User =require('./models/user')
-
+const User = require('./models/user');
 
 const PORT = process.env.PORT || 3000;
 
@@ -26,7 +23,7 @@ const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
-            useUnifiedTopology: true
+            useUnifiedTopology: true,
         });
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
@@ -38,7 +35,7 @@ const connectDB = async () => {
 const Motor = require('./models/motor');
 const Comment = require('./models/comment');
 const { motorSchema } = require('./schemas/motor');
-const { commentSchema } = require('./schemas/comment'); // Fixed import path
+const { commentSchema } = require('./schemas/comment');
 
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
@@ -50,42 +47,34 @@ app.use(methodOverride('_method'));
 app.use(flash());
 
 app.use(passport.initialize());
-app.use(passport.session())
-passport.use(new LocalStrategy(User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-
-
-
-
-
-
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg')
+    res.locals.error_msg = req.flash('error_msg');
     next();
-})
-// Server route/landing page
+});
+
 app.get('/', (req, res) => {
     res.send('Server Motositefinder');
 });
 
-// Halaman home
 app.get('/home', (req, res) => {
     res.send('home');
 });
 
-app.use('/auth',require('./routes/auth') )
-app.use('/motors',require('./routes/motor'))
-app.use('/motors/:motor_id/comments',require('./routes/comment'))
+app.use('/auth', require('./routes/auth'));
+app.use('/motors', require('./routes/motor'));
+app.use('/motors/:motor_id/comments', require('./routes/comment'));
 
 app.all('*', (req, res, next) => {
     next(new ErrorHandler('Page not Found', 404));
 });
 
-// Middleware untuk menangani suatu error
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh no, something went wrong';
