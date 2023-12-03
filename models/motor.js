@@ -8,10 +8,10 @@ const motorSchema = new Schema ({
     licensePlate: String,
     model:String,
     description: String,
-    // dateTime: {
-    //     type: Date, // Pastikan tipe datanya adalah Date
-    //     default: Date.now,
-    //   },
+    dateTime: {
+        type: Date, // Pastikan tipe datanya adalah Date
+        default: Date.now,
+      },
     image: String,
     author : {
       type: Schema.Types.ObjectId,
