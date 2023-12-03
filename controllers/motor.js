@@ -59,7 +59,7 @@ module.exports.store = async (req, res) => {
 // }))
     const motor = new Motor(req.body.motor);
     motor.author = req.user._id;
-    motor.images = images
+    // motor.images = images
     await motor.save();
     req.flash('success_msg','Selamat, anda berhasil menambahkan data')
     res.json({ message: 'Motor added successfully', motor });
