@@ -20,7 +20,7 @@ router.get('/Searchpages', wrapAsync(constrollersMotor.search));
 //  mendapatkan semua data motor dalam bentuk JSON
 router.get('/', wrapAsync(constrollersMotor.index));
 // mendapatkan detail motor berdasarkan ID dalam bentuk JSON
-router.get('/:id',isValidObjectId('/motors'),wrapAsync(constrollersMotor.detail));
+// router.get('/:id',isValidObjectId('/motors'),wrapAsync(constrollersMotor.detail));
 // menuju halaman new data motor 
 router.get('/create/form', isAuth, constrollersMotor.form ) 
 // Menambahkan data motor baru dalam bentuk JSON

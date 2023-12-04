@@ -88,7 +88,7 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
     res.send('home');
 });
-
+app.get('motor/:id',isValidObjectId('/motors'),wrapAsync(constrollersMotor.detail));
 app.use('/',require('./routes/auth') )
 app.use('/motors',require('./routes/motor'))
 app.use('/motors/:motor_id/comments',require('./routes/comment'))
