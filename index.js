@@ -2,6 +2,7 @@ const ejsMate = require('ejs-mate');
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session')
+const constrollersMotor = require('./controllers/motor')
 const cors = require('cors')
 const ErrorHandler = require('./utils/ErrorHandler');
 const Joi = require('joi');
