@@ -2,7 +2,6 @@ const ejsMate = require('ejs-mate');
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session')
-const constrollersMotor = require('./controllers/motor')
 const cors = require('cors')
 const ErrorHandler = require('./utils/ErrorHandler');
 const Joi = require('joi');
@@ -89,7 +88,7 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
     res.send('home');
 });
-app.get('/motor/:id',isValidObjectId('/motors'),wrapAsync(constrollersMotor.detail));
+
 app.use('/',require('./routes/auth') )
 app.use('/motors',require('./routes/motor'))
 app.use('/motors/:motor_id/comments',require('./routes/comment'))

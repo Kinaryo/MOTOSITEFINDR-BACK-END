@@ -9,10 +9,8 @@ const upload = require('../config/multer')
 const {isAuthorMotor}  = require('../middlewares/isAuthor')
 const {validateMotor} = require('../middlewares/validator')
 // model
-const Motor = require('../models/motor');
 const router = express.Router();
 // schema
-const { motorSchema } = require('../schemas/motor');
 
 
 
@@ -20,7 +18,7 @@ router.get('/Searchpages', wrapAsync(constrollersMotor.search));
 //  mendapatkan semua data motor dalam bentuk JSON
 router.get('/', wrapAsync(constrollersMotor.index));
 // mendapatkan detail motor berdasarkan ID dalam bentuk JSON
-// router.get('/:id',isValidObjectId('/motors'),wrapAsync(constrollersMotor.detail));
+router.get('/detail/:id',isValidObjectId('/motors'),wrapAsync(constrollersMotor.detail));
 // menuju halaman new data motor 
 router.get('/create/form', isAuth, constrollersMotor.form ) 
 // Menambahkan data motor baru dalam bentuk JSON
