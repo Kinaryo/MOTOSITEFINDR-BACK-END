@@ -36,12 +36,6 @@ const connectDB = async () => {
     }
 };
 
-mongoose.connect('mongodb://127.0.0.1/motositefinder')
-.then((result)=>{
-    console.log('connected to mongodb')
-}).catch((err)=>{
-    console.log(err)
-})
 const Motor = require('./models/motor');
 const Comment = require('./models/comment');
 const { motorSchema } = require('./schemas/motor');
@@ -115,6 +109,3 @@ connectDB().then(() => {
         console.log(`Listening On Port ${PORT}`);
     });
 });
-app.listen(5000,()=>{
-    console.log(`server is running on http://127.0.0.1:5000`)
-})
